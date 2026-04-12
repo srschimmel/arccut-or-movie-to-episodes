@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ArcCut</title>
+</head>
+<body>
+    <h1>Turn Your Video Into Episodes</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        <label>Upload Video:</label><br>
+        <input type="file" name="video" required><br><br>
+
+        <label>Episode Length (minutes):</label><br>
+        <input type="number" name="length" value="30" required><br><br>
+
+        <button type="submit">Generate Episodes</button>
+    </form>
+
+    {% if duration %}
+        <h2>Total Duration: {{ duration }} seconds</h2>
+    {% endif %}
+
+    {% if cuts %}
+        <h2>Episodes:</h2>
+        <ul>
+            {% for cut in cuts %}
+                <li>
+                    Episode {{ cut.episode }}:
+                    {{ cut.start }} → {{ cut.end }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
