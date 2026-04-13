@@ -2,31 +2,89 @@
 <html>
 <head>
     <title>ArcCut</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 760px;
+            margin: 40px auto;
+            padding: 0 16px;
+            line-height: 1.5;
+        }
+        input, button {
+            font-size: 16px;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            cursor: pointer;
+            margin-top: 12px;
+        }
+        .field {
+            margin-bottom: 16px;
+        }
+        .error {
+            color: #b00020;
+            margin: 16px 0;
+            font-weight: bold;
+        }
+        .note {
+            color: #555;
+            font-size: 14px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+    </style>
 </head>
 <body>
     <h1>Turn Your Video Into Episodes</h1>
+    <p class="note">
+        Upload a video file or paste a direct public video URL.
+    </p>
 
     <form method="POST" enctype="multipart/form-data">
-        <label>Upload Video:</label><br>
-        <input type="file" name="video" required><br><br>
+        <div class="field">
+            <label for="video_url">Video URL:</label><br>
+            <input
+                type="url"
+                id="video_url"
+                name="video_url"
+                placeholder="https://example.com/video.mp4"
+                value="{{ selected_url or '' }}"
+            >
+        </div>
 
-        <label>Episode Length (minutes):</label><br>
-        <input type="number" name="length" value="30" required><br><br>
+        <p class="note">— or upload a file —</p>
+
+        <div class="field">
+            <label for="video">Upload Video:</label><br>
+            <input type="file" id="video" name="video">
+        </div>
+
+        <div class="field">
+            <label for="length">Episode Length (minutes):</label><br>
+            <input type="number" id="length" name="length" value="30" min="1" required>
+        </div>
 
         <button type="submit">Generate Episodes</button>
     </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
 
     {% if duration %}
         <h2>Total Duration: {{ duration }} seconds</h2>
     {% endif %}
 
     {% if cuts %}
-        <h2>Episodes:</h2>
+        <h2>Episodes</h2>
         <ul>
             {% for cut in cuts %}
                 <li>
-                    Episode {{ cut.episode }}:
-                    {{ cut.start }} → {{ cut.end }}
+                    Episode {{ cut.episode }}: {{ cut.start }} → {{ cut.end }}
                 </li>
             {% endfor %}
         </ul>
